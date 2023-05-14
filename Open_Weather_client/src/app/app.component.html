@@ -1,0 +1,38 @@
+<form [formGroup]="form" (submit)="getWeatherAsObservable(form.value.city)">
+    <div>
+        <h1>Weather App:</h1>
+        City: <input type="text" size="30" placeholder="Input City"
+            formControlName="city">
+        <br><br>
+        <button type="submit">Get Weather!</button>
+    </div>
+</form>
+<hr>
+<div *ngIf="weather$ | async as w else errorOrNoInfo">
+    <p>City: {{ w.city }}</p>
+    <div *ngFor="let c of w.weather">
+        <h4>Weather:</h4>
+        <p>Description: {{ c.description }}</p>
+        <p>Icon:</p>
+        <img [src]="c.icon">
+    </div>
+        <p>Temperature: {{ w.temperature }}</p>
+        <p>Feels like: {{ w.feels_like }}</p>
+        <p>Min: {{ w.minimum_temperature }}</p>
+        <p>Max: {{ w.maximum_temperature }}</p>
+        <p>Humidity: {{ w.humidity }}</p>
+        <p>Wind Speed: {{ w.wind_speed }}</p>
+        <p>TimeStamp: {{ w.weather_timestamp }}</p>
+        <p>Sunrise: {{ w.sunrise }}</p>
+        <p>Sunset: {{ w.sunset }}</p>
+</div>
+
+<ng-template #errorOrNoInfo>
+    <div *ngIf="errorMessage else noInfo">
+        <h3>Error: {{ errorMessage }}</h3>
+    </div>
+</ng-template>
+
+<ng-template #noInfo>
+    <h3>Waiting for city input...</h3>
+</ng-template>
