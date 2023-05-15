@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject} from '@angular/core';
 import { WeatherService } from './weather.service';
 import { Observable, Subject, map } from 'rxjs';
 import { Weather } from './models';
@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent implements OnInit {
   
   wSvc = inject(WeatherService)

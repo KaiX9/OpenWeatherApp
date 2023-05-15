@@ -6,9 +6,9 @@ export interface Weather {
     maximum_temperature: string
     humidity: string
     wind_speed: string
-    weather_timestamp: number
-    sunrise: number
-    sunset: number
+    weather_timestamp: string
+    sunrise: string
+    sunset: string
     weather: Condition[]
     cod: string
     message: string
