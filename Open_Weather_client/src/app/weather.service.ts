@@ -3,7 +3,8 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable, Subject, catchError, throwError } from "rxjs";
 import { Weather } from "./models";
 
-const URL = 'http://localhost:8080/weather'
+// const URL = 'http://localhost:8080/weather'
+const URL = 'https://weather-production-e25c.up.railway.app/weather'
 
 @Injectable()
 export class WeatherService {
