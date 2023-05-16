@@ -20,6 +20,8 @@ export class AppComponent implements OnInit {
   cityInput = new Subject<string>()
   errorMessage: string = ''
 
+  
+
   ngOnInit(): void {
       this.form = this.createForm()
   }

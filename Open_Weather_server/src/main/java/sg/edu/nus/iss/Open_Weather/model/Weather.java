@@ -2,10 +2,11 @@ package sg.edu.nus.iss.Open_Weather.model;
 
 import java.io.Serializable;
 import java.io.StringReader;
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
@@ -25,6 +26,7 @@ public class Weather implements Serializable {
     private long sunriseTimeStamp;
     private long sunsetTimeStamp;
     private String cityName;
+    private long timezone;
     private List<Condition> conditions = new ArrayList<Condition>();
 
     private String cod;
@@ -35,7 +37,7 @@ public class Weather implements Serializable {
     }
 
     public Weather(String temperature, String feels_like, String minTemp, String maxTemp, String humidity, String speed,
-            long weatherTimeStamp, long sunriseTimeStamp, long sunsetTimeStamp, String cityName,
+            long weatherTimeStamp, long sunriseTimeStamp, long sunsetTimeStamp, String cityName, long timezone,
             List<Condition> conditions, String cod, String message) {
         this.temperature = temperature;
         this.feels_like = feels_like;
@@ -47,6 +49,7 @@ public class Weather implements Serializable {
         this.sunriseTimeStamp = sunriseTimeStamp;
         this.sunsetTimeStamp = sunsetTimeStamp;
         this.cityName = cityName;
+        this.timezone = timezone;
         this.conditions = conditions;
         this.cod = cod;
         this.message = message;
@@ -124,6 +127,12 @@ public class Weather implements Serializable {
     public void setCityName(String cityName) {
         this.cityName = cityName;
     }
+    public long getTimezone() {
+        return timezone;
+    }
+    public void setTimezone(long timezone) {
+        this.timezone = timezone;
+    }
     public List<Condition> getConditions() {
         return conditions;
     }
@@ -136,8 +145,8 @@ public class Weather implements Serializable {
         return "Weather [temperature=" + temperature + ", feels_like=" + feels_like + ", minTemp=" + minTemp
                 + ", maxTemp=" + maxTemp + ", humidity=" + humidity + ", speed=" + speed + ", weatherTimeStamp="
                 + weatherTimeStamp + ", sunriseTimeStamp=" + sunriseTimeStamp + ", sunsetTimeStamp=" + sunsetTimeStamp
-                + ", cityName=" + cityName + ", conditions=" + conditions + ", cod=" + cod + ", message=" + message
-                + "]";
+                + ", cityName=" + cityName + ", timezone=" + timezone + ", conditions=" + conditions + ", cod=" + cod
+                + ", message=" + message + "]";
     }
 
     public static Weather createFromJson(String json) {
@@ -157,6 +166,7 @@ public class Weather implements Serializable {
         w.setSunriseTimeStamp(sysObj.getJsonNumber("sunrise").longValue());
         w.setSunsetTimeStamp(sysObj.getJsonNumber("sunset").longValue());
         w.setCityName(jsonObj.getString("name"));
+        w.setTimezone(jsonObj.getInt("timezone"));
         JsonArray weatherArray = jsonObj.getJsonArray("weather");
         w.setConditions(weatherArray.stream()
             .map(c -> (JsonObject)c)
@@ -200,15 +210,34 @@ public class Weather implements Serializable {
             .add("weather_timestamp", convertDate(getWeatherTimeStamp()))
             .add("sunrise", convertDate(getSunriseTimeStamp()))
             .add("sunset", convertDate(getSunsetTimeStamp()))
+            .add("timezone", getTimezone())
             .add("weather", arrBuilder)
             .build();
     }
 
     public String convertDate(long timestamp) {
+
+        int offsetInSeconds = 0;
+        int offsetInMinutes = 0;
+        int offsetInHours = 0;
+        String timez = "";
+
+        if (getTimezone() >= 0) {
+            offsetInSeconds = (int) getTimezone();
+            offsetInHours = offsetInSeconds / 3600;
+            offsetInMinutes = (offsetInSeconds % 3600) / 60;
+            timez = String.format("GMT+%02d:%02d", offsetInHours, offsetInMinutes);
+        } else if (getTimezone() < 0) {
+            offsetInSeconds = (int) getTimezone();
+            offsetInHours = Math.abs(offsetInSeconds) / 3600;
+            offsetInMinutes = (Math.abs(offsetInSeconds) % 3600) / 60;
+            timez = String.format("GMT-%02d:%02d", offsetInHours, offsetInMinutes);
+        }
         Date date = new Date(timestamp * 1000);
-        DateFormat dateFormat = DateFormat.getDateTimeInstance
-            (DateFormat.LONG, DateFormat.LONG);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+        dateFormat.setTimeZone(TimeZone.getTimeZone(timez));
         return dateFormat.format(date);
+        
     }
 
 }

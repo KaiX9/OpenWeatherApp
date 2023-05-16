@@ -27,6 +27,7 @@ public class WeatherRestController {
     public ResponseEntity<String> getWeather(@RequestParam String city) {
 
         Optional<Weather> weather = this.wSvc.getWeather(city);
+        System.out.println("weather at controller: " + weather);
         if (weather.get().getCod() == null) {
             return ResponseEntity.status(HttpStatus.OK)
                             .contentType(MediaType.APPLICATION_JSON)

@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class TimePipe implements PipeTransform {
     transform(value: any): string {
         const atIndex = value.indexOf(' at ')
-        const time = value.slice(atIndex + 3, atIndex + 19)
+        const time = value.slice(atIndex + 11, atIndex + 20)
         return time 
     }
 }

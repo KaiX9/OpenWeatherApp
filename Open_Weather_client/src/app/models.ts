@@ -9,6 +9,7 @@ export interface Weather {
     weather_timestamp: string
     sunrise: string
     sunset: string
+    timezone: string
     weather: Condition[]
     cod: string
     message: string
