@@ -176,6 +176,30 @@ public class Weather implements Serializable {
         return w;
     }
 
+    public static Weather createFromJsonInRedis(String json) {
+        Weather w = new Weather();
+        JsonReader reader = Json.createReader(new StringReader(json));
+        JsonObject jObj = reader.readObject();
+        w.setCityName(jObj.getString("city"));
+        w.setTemperature(jObj.getString("temperature"));
+        w.setFeels_like(jObj.getString("feels_like"));
+        w.setMinTemp(jObj.getString("minimum_temperature"));
+        w.setMaxTemp(jObj.getString("maximum_temperature"));
+        w.setHumidity(jObj.getString("humidity"));
+        w.setSpeed(jObj.getString("wind_speed"));
+        w.setWeatherTimeStamp(jObj.getInt("weather_timestamp"));
+        w.setSunriseTimeStamp(jObj.getInt("sunrise"));
+        w.setSunsetTimeStamp(jObj.getInt("sunset"));
+        w.setTimezone(jObj.getInt("timezone"));
+        JsonArray weatherArray = jObj.getJsonArray("weather");
+        w.setConditions(weatherArray.stream()
+            .map(c -> (JsonObject)c)
+            .map(c -> Condition.createFromJsonInRedis(c))
+            .toList());
+
+        return w;
+    }
+
     public static Weather createErrorFromJson(String json) {
         Weather w = new Weather();
         JsonReader reader = Json.createReader(new StringReader(json));
@@ -210,6 +234,28 @@ public class Weather implements Serializable {
             .add("weather_timestamp", convertDate(getWeatherTimeStamp()))
             .add("sunrise", convertDate(getSunriseTimeStamp()))
             .add("sunset", convertDate(getSunsetTimeStamp()))
+            .add("timezone", getTimezone())
+            .add("weather", arrBuilder)
+            .build();
+    }
+
+    public JsonObject toJSONIntoRedis() {
+        JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
+        for (Condition c : conditions) {
+            arrBuilder.add(c.toJSON());
+        }
+
+        return Json.createObjectBuilder()
+            .add("city", getCityName())
+            .add("temperature", getTemperature())
+            .add("feels_like", getFeels_like())
+            .add("minimum_temperature", getMinTemp())
+            .add("maximum_temperature", getMaxTemp())
+            .add("humidity", getHumidity())
+            .add("wind_speed", getSpeed())
+            .add("weather_timestamp", getWeatherTimeStamp())
+            .add("sunrise", getSunriseTimeStamp())
+            .add("sunset", getSunsetTimeStamp())
             .add("timezone", getTimezone())
             .add("weather", arrBuilder)
             .build();

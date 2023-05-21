@@ -44,6 +44,13 @@ public class Condition implements Serializable {
         return c;
     }
 
+    public static Condition createFromJsonInRedis(JsonObject jsonObj) {
+        Condition c = new Condition();
+        c.setDescription(jsonObj.getString("description"));
+        c.setIcon(jsonObj.getString("icon"));
+        return c;
+    }
+
     public JsonObject toJSON() {
         return Json.createObjectBuilder()
                 .add("description", getDescription())
