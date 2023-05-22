@@ -1,0 +1,65 @@
+<div *ngIf="display$ | async as w; else errorOrNoInfo">
+  <div class="weather" *ngFor="let c of w.weather">
+    <div class="top">
+      <div>
+        <p class="city">{{ w.city }}</p>
+        <br />
+        <p class="weather-description">{{ c.description }}</p>
+      </div>
+      <img [src]="c.icon" class="weather-icon" />
+    </div>
+    <div class="bottom">
+      <p class="temperature">{{ w.temperature | round }}°C</p>
+      <div class="details">
+        <div class="parameter-row">
+          <span class="parameter-label">Feels like</span>
+          <span class="parameter-value">{{ w.feels_like | round }}°C</span>
+        </div>
+        <div class="parameter-row">
+          <span class="parameter-label">Min</span>
+          <span class="parameter-value"
+            >{{ w.minimum_temperature | round }}°C</span
+          >
+        </div>
+        <div class="parameter-row">
+          <span class="parameter-label">Max</span>
+          <span class="parameter-value"
+            >{{ w.maximum_temperature | round }}°C</span
+          >
+        </div>
+        <div class="parameter-row">
+          <span class="parameter-label">Wind</span>
+          <span class="parameter-value">{{ w.wind_speed | round }}m/s</span>
+        </div>
+        <div class="parameter-row">
+          <span class="parameter-label">Humidity</span>
+          <span class="parameter-value">{{ w.humidity }}%</span>
+        </div>
+        <div class="parameter-row">
+          <span class="parameter-label">Sunrise</span>
+          <span class="parameter-value">{{ w.sunrise | time }}</span>
+        </div>
+        <div class="parameter-row">
+          <span class="parameter-label">Sunset</span>
+          <span class="parameter-value">{{ w.sunset | time }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="center-text">
+    <a href="/"><button type="button">Back</button></a>
+</div>
+
+<ng-template #errorOrNoInfo>
+    <div *ngIf="errorMessage; else noInfo">
+      <h3 class="center-text" style="color: red">
+        Error: {{ errorMessage }}
+      </h3>
+    </div>
+</ng-template>
+
+<ng-template #noInfo>
+    <h3 class="center-text">No weather details available</h3>
+</ng-template>

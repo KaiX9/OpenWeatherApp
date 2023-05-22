@@ -16,7 +16,7 @@ import sg.edu.nus.iss.Open_Weather.model.Weather;
 import sg.edu.nus.iss.Open_Weather.service.WeatherService;
 
 @RestController
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 public class WeatherRestController {
 

@@ -9,20 +9,31 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { RoundPipe } from './round.pipe';
 import { TimePipe } from './time.pipe';
+import { CitylistComponent } from './components/citylist.component';
+import { WeatherdisplayComponent } from './components/weatherdisplay.component';
+import { Routes, RouterModule } from '@angular/router';
 
+const appRoutes: Routes = [
+  { path: '', component: CitylistComponent },
+  { path: 'display', component: WeatherdisplayComponent },
+  { path: '**', redirectTo: '/', pathMatch: 'full' }
+]
 
 @NgModule({
   declarations: [
     AppComponent,
     RoundPipe,
-    TimePipe
+    TimePipe,
+    CitylistComponent,
+    WeatherdisplayComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    RouterModule.forRoot(appRoutes)
   ],
   providers: [WeatherService],
   bootstrap: [AppComponent]

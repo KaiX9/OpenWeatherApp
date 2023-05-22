@@ -1,0 +1,44 @@
+<html>
+  <body>
+    <form [formGroup]="form" (submit)="addCity(this.form.value.city)">
+      <div>
+        <p>
+          <mat-toolbar color="primary" class="center-text">
+            <span>Weather App</span>
+          </mat-toolbar>
+        </p>
+        <h2 class="center-text">
+          <span> <img src="/assets/city.png" style="margin-right: 8px" /> </span
+          >City
+        </h2>
+        <input
+          type="text"
+          placeholder="Type city here..."
+          class="cityinput nosubmit"
+          formControlName="city"
+          style="text-align: center"
+        />
+        <button type="submit" mat-raised-button color="accent">Add</button>
+        <br />
+      </div>
+      <div *ngIf="cityArray.length > 0; else noCity">
+        <table class="citytable" *ngFor="let c of cityArray; let i = index">
+          <tr>
+            <span (click)="getWeatherAsObservable(i)">
+              {{ c }}&nbsp;&nbsp;&nbsp;&nbsp;<button
+                type="button"
+                (click)="deleteCity(i)"
+              >
+                X
+              </button>
+            </span>
+          </tr>
+        </table>
+      </div>
+    </form>
+
+    <ng-template #noCity>
+      <h3 class="center-text">No city added</h3>
+    </ng-template>
+  </body>
+</html>
